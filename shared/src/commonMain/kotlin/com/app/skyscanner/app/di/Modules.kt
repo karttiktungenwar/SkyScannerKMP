@@ -3,8 +3,6 @@ package com.app.skyscanner.app.di
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.network.ktor3.KtorNetworkFetcherFactory
-import coil3.request.crossfade
-import coil3.util.DebugLogger
 import com.app.skyscanner.core.common.data.repository.TravelRepositoryImpl
 import com.app.skyscanner.core.common.domain.repository.TravelRepository
 import com.app.skyscanner.presentation.home.HomeViewModel
