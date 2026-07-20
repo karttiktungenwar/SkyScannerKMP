@@ -133,10 +133,10 @@ fun DestinationCard(
             Spacer(modifier = Modifier.height(8.dp))
             RatingBadge(
                 rating = destination.rating,
-                reviewCount = destination.reviewCount,
-                textColor = Color.White,
-                starColor = Color(0xFFFFC107), // AppColors.star equivalent
                 modifier = Modifier.align(Alignment.Start),
+                reviewCount = destination.reviewCount,
+                textColor = Color.White, // AppColors.star equivalent
+                starColor = Color(0xFFFFC107),,
             )
         }
 
