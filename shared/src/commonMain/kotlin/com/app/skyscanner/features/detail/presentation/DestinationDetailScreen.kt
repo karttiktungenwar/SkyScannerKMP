@@ -1,9 +1,19 @@
 package com.app.skyscanner.features.detail.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -11,8 +21,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +43,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import com.app.skyscanner.core.common.wigets.TravelInfoBadge
+import com.app.skyscanner.core.common.wigets.TravelSectionHeader
 import com.app.skyscanner.core.constants.AppColors
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -44,128 +70,133 @@ fun DestinationDetailScreen(
 
     if (state.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(color = AppColors.ink)
+            CircularProgressIndicator(color = AppColors.coral)
         }
     } else if (destination != null) {
-        Scaffold(
-            content = { padding ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = padding.calculateBottomPadding())
-                ) {
-                    item {
-                        Box(modifier = Modifier.fillMaxWidth().height(300.dp)) {
-                            Image(
-                                painter = rememberAsyncImagePainter(destination.imageUrl),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                CircleIconButton(
-                                    icon = Icons.AutoMirrored.Filled.ArrowBack,
-                                    onClick = { navController.popBackStack() }
-                                )
-                                CircleIconButton(
-                                    icon = Icons.Default.FavoriteBorder,
-                                    onClick = { /* Handle favorite */ }
-                                )
-                            }
-                        }
-                    }
-
-                    item {
-                        Column(
+        Scaffold(containerColor = AppColors.background) { padding ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(AppColors.background)
+                    .padding(bottom = padding.calculateBottomPadding())
+            ) {
+                item {
+                    Box(modifier = Modifier.fillMaxWidth().height(320.dp)) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalPlatformContext.current)
+                                .data(destination.imageUrl)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.2f))
+                        )
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                                .background(AppColors.surface)
-                                .padding(24.dp)
-                                .offset(y = (-24).dp)
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                            CircleIconButton(
+                                icon = Icons.AutoMirrored.Filled.ArrowBack,
+                                onClick = { navController.popBackStack() }
+                            )
+                            CircleIconButton(
+                                icon = Icons.Default.FavoriteBorder,
+                                onClick = { /* Handle favorite */ }
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+                            .background(AppColors.surface)
+                            .padding(24.dp)
+                            .offset(y = (-24).dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
                                 Text(
                                     text = destination.city,
                                     fontSize = 28.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = AppColors.ink
                                 )
-                                Badge(
-                                    containerColor = AppColors.ink,
-                                    contentColor = Color.White
-                                ) {
-                                    Text("★ ${destination.rating}", modifier = Modifier.padding(4.dp))
-                                }
-                            }
-
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(8.dp)
-                                        .clip(CircleShape)
-                                        .background(Color.Green)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "${destination.country} • ${destination.reviewCount} Reviews",
+                                    text = destination.country,
                                     color = AppColors.inkSoft,
-                                    fontSize = 14.sp
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(top = 4.dp)
                                 )
                             }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            var isExpanded by remember { mutableStateOf(false) }
-                            Text(
-                                text = destination.description,
-                                maxLines = if (isExpanded) Int.MAX_VALUE else 3,
-                                color = AppColors.inkSoft,
-                                fontSize = 16.sp,
-                                lineHeight = 22.sp
-                            )
-                            Text(
-                                text = if (isExpanded) "Read less" else "Read more",
-                                color = AppColors.ink,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.clickable { isExpanded = !isExpanded }.padding(vertical = 4.dp)
-                            )
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Upcoming tours", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                                Text("See all", color = AppColors.inkSoft, fontSize = 14.sp)
+                            Badge(containerColor = AppColors.coral, contentColor = Color.White) {
+                                Text("★ ${destination.rating}", modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp))
                             }
+                        }
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(10.dp)
+                                    .clip(CircleShape)
+                                    .background(AppColors.mint)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "${destination.reviewCount} travelers loved this place",
+                                color = AppColors.inkSoft,
+                                fontSize = 14.sp
+                            )
+                        }
 
-                            // Tours list
-                            LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                                items(state.tours.size) { index ->
-                                    TourCard(
-                                        tour = state.tours[index],
-                                        onClick = { /* Navigate to tour detail */ }
-                                    )
-                                }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        TravelInfoBadge(label = "Best time: Spring")
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        var isExpanded by remember { mutableStateOf(false) }
+                        Text(
+                            text = destination.description,
+                            maxLines = if (isExpanded) Int.MAX_VALUE else 3,
+                            color = AppColors.inkSoft,
+                            fontSize = 15.sp,
+                            lineHeight = 22.sp
+                        )
+                        Text(
+                            text = if (isExpanded) "Read less" else "Read more",
+                            color = AppColors.ink,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.clickable { isExpanded = !isExpanded }.padding(vertical = 6.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TravelSectionHeader(title = "Upcoming tours", subtitle = "See all")
+                        Spacer(modifier = Modifier.height(12.dp))
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            items(state.tours.size) { index ->
+                                TourCard(
+                                    tour = state.tours[index],
+                                    onClick = { /* Navigate to tour detail */ }
+                                )
                             }
                         }
                     }
                 }
             }
-        )
+        }
     }
 }
 
@@ -176,8 +207,8 @@ fun CircleIconButton(
 ) {
     Surface(
         shape = CircleShape,
-        color = Color.White.copy(alpha = 0.8f),
-        modifier = Modifier.size(40.dp).clickable(onClick = onClick)
+        color = Color.White.copy(alpha = 0.87f),
+        modifier = Modifier.size(42.dp).clickable(onClick = onClick)
     ) {
         Icon(
             imageVector = icon,

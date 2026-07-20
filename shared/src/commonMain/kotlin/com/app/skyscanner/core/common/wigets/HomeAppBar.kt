@@ -1,6 +1,6 @@
 package com.app.skyscanner.core.common.wigets
 
-import androidx.compose.foundation.Image
+import coil3.compose.LocalPlatformContext
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -11,7 +11,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 
 @Composable
 fun HomeAppBar(
@@ -44,8 +47,13 @@ fun HomeAppBar(
         },
         actions = {
             if (avatarUrl != null) {
-                Image(
-                    painter = rememberAsyncImagePainter(avatarUrl),
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                        .data(avatarUrl)
+                        .crossfade(true)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .build(),
                     contentDescription = "Avatar",
                     modifier = Modifier
                         .size(avatarRadius.dp * 2)

@@ -64,9 +64,8 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlinx.datetime)
             implementation(libs.coil.compose)
-
-
-
+            implementation(libs.coil.network.ktor3)
+            implementation(libs.ktor.client.cio)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

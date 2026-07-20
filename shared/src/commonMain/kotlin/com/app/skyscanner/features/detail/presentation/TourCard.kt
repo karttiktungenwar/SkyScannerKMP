@@ -1,6 +1,5 @@
 package com.app.skyscanner.features.detail.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,7 +16,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.app.skyscanner.core.common.domain.enitity.Tour
 import com.app.skyscanner.core.constants.AppColors
 
@@ -37,8 +39,11 @@ fun TourCard(
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier.fillMaxWidth().height(150.dp)) {
-                Image(
-                    painter = rememberAsyncImagePainter(tour.imageUrl),
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                        .data(tour.imageUrl)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop

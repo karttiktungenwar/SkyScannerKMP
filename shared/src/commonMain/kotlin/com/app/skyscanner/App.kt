@@ -10,9 +10,13 @@ import androidx.navigation.toRoute
 import com.app.skyscanner.core.theme.SkyScannerTheme
 import kotlinx.serialization.Serializable
 import org.koin.compose.KoinContext
+import coil3.ImageLoader
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.compose.LocalPlatformContext
+import org.koin.core.parameter.parametersOf
 
 import com.app.skyscanner.features.detail.presentation.DestinationDetailScreen
-import com.app.skyscanner.core.common.domain.enitity.Destination
+import org.koin.compose.koinInject
 
 @Serializable
 object HomeRoute
@@ -24,6 +28,10 @@ data class DetailRoute(val destinationId: String)
 @Preview
 fun App() {
     KoinContext {
+        val context = LocalPlatformContext.current
+        val imageLoader = koinInject<ImageLoader> { parametersOf(context) }
+        setSingletonImageLoaderFactory { imageLoader }
+
         SkyScannerTheme {
             val navController = rememberNavController()
 
