@@ -27,7 +27,6 @@ fun RatingBadge(
     reviewCount: Int? = null,
     textColor: Color = Color.Unspecified, // Replace with your AppColors.ink equivalent
     starColor: Color? = null,
-    format: String.Companion.(String, Double) -> Unit
 ) {
     val activeStarColor = starColor ?: textColor
 
@@ -54,7 +53,7 @@ fun RatingBadge(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = String.format("%.1f", rating).toString(),
+                text = rating.toString(),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.W600,
                 color = textColor

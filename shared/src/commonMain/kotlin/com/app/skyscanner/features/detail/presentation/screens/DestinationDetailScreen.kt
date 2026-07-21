@@ -1,4 +1,4 @@
-package com.app.skyscanner.features.detail.presentation
+package com.app.skyscanner.features.detail.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,18 +15,17 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Badge
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,9 +47,12 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.app.skyscanner.core.common.wigets.TravelInfoBadge
-import com.app.skyscanner.core.common.wigets.TravelSectionHeader
+import com.app.skyscanner.core.common.wigets.CircleIconButton
+import com.app.skyscanner.features.detail.presentation.widgets.TravelInfoBadge
+import com.app.skyscanner.features.detail.presentation.widgets.TravelSectionHeader
 import com.app.skyscanner.core.constants.AppColors
+import com.app.skyscanner.features.detail.presentation.DetailViewModel
+import com.app.skyscanner.features.detail.presentation.widgets.TourCard
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -61,6 +64,7 @@ fun DestinationDetailScreen(
 ) {
     val viewModel: DetailViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(destinationId) {
         viewModel.loadDestination(destinationId)
@@ -73,15 +77,25 @@ fun DestinationDetailScreen(
             CircularProgressIndicator(color = AppColors.coral)
         }
     } else if (destination != null) {
-        Scaffold(containerColor = AppColors.background) { padding ->
-            LazyColumn(
+        Scaffold(
+            containerColor = AppColors.background) { padding ->
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(AppColors.background)
                     .padding(bottom = padding.calculateBottomPadding())
             ) {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth().height(320.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                ) {
+                    // 1. Hero Image Header
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(320.dp)
+                    ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalPlatformContext.current)
                                 .data(destination.imageUrl)
@@ -91,11 +105,13 @@ fun DestinationDetailScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
+
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color.Black.copy(alpha = 0.2f))
                         )
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -112,16 +128,15 @@ fun DestinationDetailScreen(
                             )
                         }
                     }
-                }
 
-                item {
+                    // 2. Content Sheet with Rounded Top Corners & Overlap
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .offset(y = (-28).dp) // Pulls the sheet up to overlap the image header
                             .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                             .background(AppColors.surface)
                             .padding(24.dp)
-                            .offset(y = (-24).dp)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -157,14 +172,11 @@ fun DestinationDetailScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "${destination.reviewCount} travelers loved this place",
+                                text = "${destination.reviewCount} reviews",
                                 color = AppColors.inkSoft,
                                 fontSize = 14.sp
                             )
                         }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        TravelInfoBadge(label = "Best time: Spring")
 
                         Spacer(modifier = Modifier.height(16.dp))
                         var isExpanded by remember { mutableStateOf(false) }
@@ -185,6 +197,7 @@ fun DestinationDetailScreen(
                         Spacer(modifier = Modifier.height(24.dp))
                         TravelSectionHeader(title = "Upcoming tours", subtitle = "See all")
                         Spacer(modifier = Modifier.height(12.dp))
+
                         LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             items(state.tours.size) { index ->
                                 TourCard(
@@ -200,21 +213,3 @@ fun DestinationDetailScreen(
     }
 }
 
-@Composable
-fun CircleIconButton(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    onClick: () -> Unit
-) {
-    Surface(
-        shape = CircleShape,
-        color = Color.White.copy(alpha = 0.87f),
-        modifier = Modifier.size(42.dp).clickable(onClick = onClick)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.padding(8.dp),
-            tint = AppColors.ink
-        )
-    }
-}

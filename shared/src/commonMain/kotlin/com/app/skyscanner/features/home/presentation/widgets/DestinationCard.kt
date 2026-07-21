@@ -136,7 +136,7 @@ fun DestinationCard(
                 modifier = Modifier.align(Alignment.Start),
                 reviewCount = destination.reviewCount,
                 textColor = Color.White, // AppColors.star equivalent
-                starColor = Color(0xFFFFC107),,
+                starColor = Color(0xFFFFC107),
             )
         }
 

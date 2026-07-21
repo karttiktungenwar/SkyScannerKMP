@@ -1,4 +1,4 @@
-package com.app.skyscanner.core.common.wigets
+package com.app.skyscanner.features.detail.presentation.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

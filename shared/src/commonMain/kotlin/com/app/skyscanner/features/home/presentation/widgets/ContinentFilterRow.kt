@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.app.skyscanner.core.common.wigets.TravelPillChip
+import com.app.skyscanner.features.detail.presentation.widgets.TravelPillChip
 
 @Composable
 fun ContinentFilterRow(

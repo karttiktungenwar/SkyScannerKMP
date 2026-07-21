@@ -15,7 +15,7 @@ import coil3.compose.setSingletonImageLoaderFactory
 import coil3.compose.LocalPlatformContext
 import org.koin.core.parameter.parametersOf
 
-import com.app.skyscanner.features.detail.presentation.DestinationDetailScreen
+import com.app.skyscanner.features.detail.presentation.screens.DestinationDetailScreen
 import org.koin.compose.koinInject
 
 @Serializable

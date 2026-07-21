@@ -11,4 +11,5 @@ object AppColors {
     val coral: Color = Color(0xFFFF7A59)
     val sky: Color = Color(0xFF5DB6FF)
     val mint: Color = Color(0xFF4FC3A1)
+    val transparent: Color = Color(0x00000000)
 }

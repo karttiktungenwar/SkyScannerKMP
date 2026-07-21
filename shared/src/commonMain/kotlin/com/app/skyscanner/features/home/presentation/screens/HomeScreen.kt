@@ -1,15 +1,14 @@
 package com.app.skyscanner.presentation.home.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -27,7 +26,7 @@ import com.app.skyscanner.DetailRoute
 import com.app.skyscanner.core.common.wigets.AppBottomNav
 import com.app.skyscanner.core.common.wigets.HomeAppBar
 import com.app.skyscanner.core.common.wigets.SearchTextField
-import com.app.skyscanner.core.common.wigets.TravelSectionHeader
+import com.app.skyscanner.features.detail.presentation.widgets.TravelSectionHeader
 import com.app.skyscanner.core.constants.AppColors
 import com.app.skyscanner.presentation.home.HomeViewModel
 import com.app.skyscanner.features.home.presentation.widgets.ContinentFilterRow
